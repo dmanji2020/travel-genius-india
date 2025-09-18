@@ -10,6 +10,7 @@ import { ArrowLeft, ArrowRight, MapPin, Calendar, DollarSign, Users, Heart, Came
 interface PlanningWizardProps {
   onComplete: () => void;
   onBack: () => void;
+  isDemoMode?: boolean;
 }
 
 const interests = [
@@ -21,14 +22,16 @@ const interests = [
   { id: "beaches", label: "Beaches", icon: Waves },
 ];
 
-export const PlanningWizard = ({ onComplete, onBack }: PlanningWizardProps) => {
+export const PlanningWizard = ({ onComplete, onBack, isDemoMode = false }: PlanningWizardProps) => {
   const [step, setStep] = useState(1);
-  const [budget, setBudget] = useState([50000]);
-  const [duration, setDuration] = useState([7]);
-  const [travelers, setTravelers] = useState(2);
-  const [origin, setOrigin] = useState("");
-  const [destination, setDestination] = useState("");
-  const [selectedInterests, setSelectedInterests] = useState<string[]>([]);
+  const [budget, setBudget] = useState(isDemoMode ? [75000] : [50000]);
+  const [duration, setDuration] = useState(isDemoMode ? [5] : [7]);
+  const [travelers, setTravelers] = useState(isDemoMode ? 2 : 2);
+  const [origin, setOrigin] = useState(isDemoMode ? "Mumbai" : "");
+  const [destination, setDestination] = useState(isDemoMode ? "Goa" : "");
+  const [selectedInterests, setSelectedInterests] = useState<string[]>(
+    isDemoMode ? ["beaches", "food", "nightlife"] : []
+  );
 
   const toggleInterest = (interestId: string) => {
     setSelectedInterests(prev =>
@@ -42,7 +45,12 @@ export const PlanningWizard = ({ onComplete, onBack }: PlanningWizardProps) => {
     if (step < 3) {
       setStep(step + 1);
     } else {
-      onComplete();
+      // In demo mode, auto-complete after a short delay
+      if (isDemoMode) {
+        setTimeout(() => onComplete(), 1000);
+      } else {
+        onComplete();
+      }
     }
   };
 
@@ -69,15 +77,19 @@ export const PlanningWizard = ({ onComplete, onBack }: PlanningWizardProps) => {
             </div>
             
             <CardTitle className="text-3xl font-bold bg-gradient-sunset bg-clip-text text-transparent">
+              {isDemoMode && <Badge className="mb-2 bg-accent/10 text-accent border-accent/20">Demo Mode</Badge>}
               {step === 1 && "Trip Basics"}
               {step === 2 && "Budget & Duration"}
               {step === 3 && "Your Interests"}
             </CardTitle>
             
             <CardDescription className="text-lg">
-              {step === 1 && "Tell us where you're going and who's traveling"}
-              {step === 2 && "Set your budget and trip duration preferences"}
-              {step === 3 && "Choose activities and experiences you love"}
+              {isDemoMode && step === 1 && "This demo shows a pre-filled Mumbai to Goa trip"}
+              {isDemoMode && step === 2 && "Budget and duration optimized for a perfect Goa getaway"}
+              {isDemoMode && step === 3 && "Popular interests for beach destinations pre-selected"}
+              {!isDemoMode && step === 1 && "Tell us where you're going and who's traveling"}
+              {!isDemoMode && step === 2 && "Set your budget and trip duration preferences"}
+              {!isDemoMode && step === 3 && "Choose activities and experiences you love"}
             </CardDescription>
           </CardHeader>
 
@@ -249,11 +261,13 @@ export const PlanningWizard = ({ onComplete, onBack }: PlanningWizardProps) => {
                 variant="hero" 
                 onClick={nextStep}
                 disabled={
-                  (step === 1 && (!origin || !destination)) ||
-                  (step === 3 && selectedInterests.length === 0)
+                  !isDemoMode && (
+                    (step === 1 && (!origin || !destination)) ||
+                    (step === 3 && selectedInterests.length === 0)
+                  )
                 }
               >
-                {step === 3 ? "Generate My Trip" : "Next Step"}
+                {step === 3 ? (isDemoMode ? "Generating Demo Trip..." : "Generate My Trip") : "Next Step"}
                 <ArrowRight className="w-4 h-4 ml-2" />
               </Button>
             </div>

@@ -11,16 +11,24 @@ import { TripItinerary } from "@/components/TripItinerary";
 const Index = () => {
   const [showPlanning, setShowPlanning] = useState(false);
   const [showItinerary, setShowItinerary] = useState(false);
+  const [isDemoMode, setIsDemoMode] = useState(false);
 
   if (showItinerary) {
     return <TripItinerary onBack={() => setShowItinerary(false)} />;
   }
 
   if (showPlanning) {
-    return <PlanningWizard onComplete={() => {
-      setShowPlanning(false);
-      setShowItinerary(true);
-    }} onBack={() => setShowPlanning(false)} />;
+    return <PlanningWizard 
+      onComplete={() => {
+        setShowPlanning(false);
+        setShowItinerary(true);
+      }} 
+      onBack={() => {
+        setShowPlanning(false);
+        setIsDemoMode(false);
+      }}
+      isDemoMode={isDemoMode}
+    />;
   }
 
   return (
@@ -60,7 +68,15 @@ const Index = () => {
                 Start Planning Your Trip
               </Button>
               
-              <Button variant="outline" size="lg" className="text-lg px-8 py-4">
+              <Button 
+                variant="outline" 
+                size="lg" 
+                className="text-lg px-8 py-4"
+                onClick={() => {
+                  setIsDemoMode(true);
+                  setShowPlanning(true);
+                }}
+              >
                 <Star className="w-5 h-5 mr-2" />
                 See Demo Journey
               </Button>
