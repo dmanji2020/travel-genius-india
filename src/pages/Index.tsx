@@ -37,7 +37,7 @@ const Index = () => {
           <div className="max-w-4xl mx-auto">
             <Badge className="mb-6 bg-primary/10 text-primary border-primary/20">
               <Shield className="w-4 h-4 mr-2" />
-              EaseMyTrip Hackathon Prototype
+              Gen AI Exchange Hackathon Prototype - powered by Google AI.
             </Badge>
             
             <h1 className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-sunset bg-clip-text text-transparent">
