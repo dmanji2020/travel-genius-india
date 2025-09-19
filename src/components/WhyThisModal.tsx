@@ -6,6 +6,7 @@ import { Brain, DollarSign, Clock, Heart, Target, TrendingUp } from "lucide-reac
 interface WhyThisModalProps {
   activityId: string;
   onClose: () => void;
+  mockData?: any;
 }
 
 // Mock explanations - in real app, this would come from AI analysis
@@ -62,7 +63,60 @@ const explanations = {
   }
 };
 
-export const WhyThisModal = ({ activityId, onClose }: WhyThisModalProps) => {
+export const WhyThisModal = ({ activityId, onClose, mockData }: WhyThisModalProps) => {
+  // Use mockData if available, otherwise fall back to static explanations
+  if (mockData?.whyThis) {
+    return (
+      <Dialog open={true} onOpenChange={onClose}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Brain className="w-5 h-5 text-primary" />
+              AI Recommendation Explained
+            </DialogTitle>
+            <DialogDescription>
+              Here's why our AI selected this option for your trip
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <span className="text-sm font-medium">Confidence Score</span>
+              <Badge variant="secondary" className="bg-trust/10 text-trust">
+                95% Match
+              </Badge>
+            </div>
+            
+            <div className="p-4 bg-muted/30 rounded-lg">
+              <div className="flex gap-3">
+                <Brain className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
+                <div>
+                  <h4 className="font-medium mb-2">AI Analysis</h4>
+                  <p className="text-sm text-muted-foreground">{mockData.whyThis}</p>
+                </div>
+              </div>
+            </div>
+            
+            <div className="bg-accent/10 border border-accent/20 rounded-lg p-3">
+              <div className="flex items-center gap-2 mb-2">
+                <Target className="w-4 h-4 text-accent" />
+                <span className="font-medium text-accent">Personalization Factor</span>
+              </div>
+              <p className="text-sm text-muted-foreground">
+                This recommendation is tailored based on your budget preferences, travel interests, 
+                and successful similar trips by travelers with matching profiles.
+              </p>
+            </div>
+            
+            <Button onClick={onClose} className="w-full">
+              Got it, thanks!
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+    );
+  }
+
   const explanation = explanations[activityId as keyof typeof explanations];
   
   if (!explanation) return null;

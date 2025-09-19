@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
 import { Badge } from "@/components/ui/badge";
-import { ArrowLeft, ArrowRight, MapPin, Calendar, DollarSign, Users, Heart, Camera, Mountain, Utensils, Music, Waves } from "lucide-react";
+import { ArrowLeft, ArrowRight, MapPin, Calendar, DollarSign, Users, Heart, Camera, Mountain, Utensils, Music, Waves, Loader2, Sparkles } from "lucide-react";
 
 interface PlanningWizardProps {
   onComplete: () => void;
@@ -24,14 +24,16 @@ const interests = [
 
 export const PlanningWizard = ({ onComplete, onBack, isDemoMode = false }: PlanningWizardProps) => {
   const [step, setStep] = useState(1);
-  const [budget, setBudget] = useState(isDemoMode ? [75000] : [50000]);
+  const [budget, setBudget] = useState(isDemoMode ? [45000] : [50000]);
   const [duration, setDuration] = useState(isDemoMode ? [5] : [7]);
   const [travelers, setTravelers] = useState(isDemoMode ? 2 : 2);
-  const [origin, setOrigin] = useState(isDemoMode ? "Mumbai" : "");
+  const [origin, setOrigin] = useState(isDemoMode ? "Bengaluru" : "");
   const [destination, setDestination] = useState(isDemoMode ? "Goa" : "");
   const [selectedInterests, setSelectedInterests] = useState<string[]>(
-    isDemoMode ? ["beaches", "food", "nightlife"] : []
+    isDemoMode ? ["beaches", "food", "nightlife", "cultural"] : []
   );
+  const [isGeneratingDemo, setIsGeneratingDemo] = useState(false);
+  const [demoMessage, setDemoMessage] = useState("");
 
   const toggleInterest = (interestId: string) => {
     setSelectedInterests(prev =>
@@ -41,13 +43,30 @@ export const PlanningWizard = ({ onComplete, onBack, isDemoMode = false }: Plann
     );
   };
 
+  const simulateDemoGeneration = async () => {
+    setIsGeneratingDemo(true);
+    const messages = [
+      "Planning your trip...",
+      "Talking to AI...",
+      "Finding local experiences...",
+      "Optimizing for your budget & interests..."
+    ];
+
+    for (let i = 0; i < messages.length; i++) {
+      setDemoMessage(messages[i]);
+      await new Promise(resolve => setTimeout(resolve, 1200));
+    }
+
+    // Complete the demo
+    onComplete();
+  };
+
   const nextStep = () => {
     if (step < 3) {
       setStep(step + 1);
     } else {
-      // In demo mode, auto-complete after a short delay
       if (isDemoMode) {
-        setTimeout(() => onComplete(), 1000);
+        simulateDemoGeneration();
       } else {
         onComplete();
       }
@@ -84,8 +103,8 @@ export const PlanningWizard = ({ onComplete, onBack, isDemoMode = false }: Plann
             </CardTitle>
             
             <CardDescription className="text-lg">
-              {isDemoMode && step === 1 && "This demo shows a pre-filled Mumbai to Goa trip"}
-              {isDemoMode && step === 2 && "Budget and duration optimized for a perfect Goa getaway"}
+              {isDemoMode && step === 1 && "This demo shows a pre-filled Bengaluru to Goa trip"}
+              {isDemoMode && step === 2 && "Budget and duration optimized for a perfect 5-day Goa getaway"}
               {isDemoMode && step === 3 && "Popular interests for beach destinations pre-selected"}
               {!isDemoMode && step === 1 && "Tell us where you're going and who's traveling"}
               {!isDemoMode && step === 2 && "Set your budget and trip duration preferences"}
@@ -261,14 +280,19 @@ export const PlanningWizard = ({ onComplete, onBack, isDemoMode = false }: Plann
                 variant="hero" 
                 onClick={nextStep}
                 disabled={
-                  !isDemoMode && (
+                  isGeneratingDemo || (!isDemoMode && (
                     (step === 1 && (!origin || !destination)) ||
                     (step === 3 && selectedInterests.length === 0)
-                  )
+                  ))
                 }
               >
-                {step === 3 ? (isDemoMode ? "Generating Demo Trip..." : "Generate My Trip") : "Next Step"}
-                <ArrowRight className="w-4 h-4 ml-2" />
+                {isGeneratingDemo ? (
+                  <>
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    {demoMessage}
+                  </>
+                ) : step === 3 ? (isDemoMode ? "Generate Demo Trip" : "Generate My Trip") : "Next Step"}
+                {!isGeneratingDemo && <ArrowRight className="w-4 h-4 ml-2" />}
               </Button>
             </div>
           </CardContent>
