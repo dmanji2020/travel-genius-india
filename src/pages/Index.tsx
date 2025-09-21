@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { MapPin, Plane, Calendar, Users, Star, Shield, TrendingUp, Heart } from "lucide-react";
 import heroImage from "@/assets/hero-travel.jpg";
 import hiddenGemsImage from "@/assets/hidden-gems.jpg";
+import tripeaseLogo from "@/assets/tripease-logo.png";
 import { PlanningWizard } from "@/components/PlanningWizard";
 import { TripItinerary } from "@/components/TripItinerary";
 
@@ -48,8 +49,16 @@ const Index = () => {
               Gen AI Exchange Hackathon Prototype - powered by Google AI.
             </Badge>
             
+            <div className="mb-6 flex justify-center">
+              <img 
+                src={tripeaseLogo} 
+                alt="TripEase.AI Logo" 
+                className="h-16 w-auto"
+              />
+            </div>
+            
             <h1 className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-sunset bg-clip-text text-transparent">
-              AI-Powered Trip Planning
+              TripEase.AI
             </h1>
             
             <p className="text-xl md:text-2xl text-muted-foreground mb-8 max-w-2xl mx-auto">
@@ -198,7 +207,7 @@ const Index = () => {
           <h2 className="text-4xl font-bold mb-6">Built on Trust & Transparency</h2>
           <p className="text-xl mb-8 max-w-3xl mx-auto opacity-90">
             No hidden fees, no surprise charges. See exactly what you're paying for with our transparent 
-            pricing model. EaseMyTrip's commitment to honest travel planning, powered by AI.
+            pricing model. TripEase.AI's commitment to honest travel planning, powered by AI.
           </p>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
