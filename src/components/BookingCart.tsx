@@ -11,11 +11,218 @@ interface BookingCartProps {
   selectedItems: string[];
 }
 
-const mockCartItems = [
-  { id: "arrival", name: "Mumbai to Goa Flight", cost: 8500, type: "Transport" },
-  { id: "checkin", name: "Sunset Beach Resort (7 nights)", cost: 24500, type: "Accommodation" },
-  { id: "beach", name: "Calangute Beach Activities", cost: 1200, type: "Activities" },
-];
+// This should match the actual itinerary data structure
+const getTripDates = () => {
+  const startDate = new Date();
+  startDate.setDate(startDate.getDate() + 15);
+  const endDate = new Date(startDate);
+  endDate.setDate(endDate.getDate() + 4);
+  
+  const formatDate = (date: Date) => {
+    return date.toLocaleDateString('en-US', { 
+      weekday: 'short', 
+      month: 'short', 
+      day: 'numeric' 
+    });
+  };
+  
+  return {
+    start: formatDate(startDate),
+    end: formatDate(endDate),
+    days: Array.from({ length: 5 }, (_, i) => {
+      const date = new Date(startDate);
+      date.setDate(date.getDate() + i);
+      return {
+        dayNumber: i + 1,
+        date: formatDate(date),
+        fullDate: date.toLocaleDateString('en-US', { 
+          month: 'long', 
+          day: 'numeric',
+          year: 'numeric'
+        })
+      };
+    })
+  };
+};
+
+const getAllActivities = () => {
+  const days = getTripDates().days;
+  const allActivities = [];
+  
+  days.forEach((dayInfo, index) => {
+    switch (index) {
+      case 0: // Day 1
+        allActivities.push(
+          {
+            id: "flight-bengaluru-goa",
+            title: "Flight Bengaluru to Goa",
+            description: "Direct flight, 1.5 hours (IndiGo)",
+            cost: 9500,
+            type: "transport"
+          },
+          {
+            id: "airport-transfer",
+            title: "Airport Transfer to Hotel",
+            description: "Private cab to Calangute",
+            cost: 800,
+            type: "transport"
+          },
+          {
+            id: "hotel-checkin",
+            title: "Check-in at Resort Terra Paraiso",
+            description: "Boutique resort near Calangute Beach",
+            cost: 8000,
+            type: "accommodation"
+          },
+          {
+            id: "calangute-beach",
+            title: "Calangute Beach & Water Sports",
+            description: "Parasailing, jet skiing, banana boat",
+            cost: 2500,
+            type: "activity"
+          },
+          {
+            id: "titos-lane",
+            title: "Tito's Lane Evening Walk",
+            description: "Explore Baga's famous nightlife street",
+            cost: 0,
+            type: "activity"
+          }
+        );
+        break;
+      case 1: // Day 2
+        allActivities.push(
+          {
+            id: "old-goa-tour",
+            title: "Old Goa UNESCO Sites Tour",
+            description: "Basilica of Bom Jesus, Se Cathedral",
+            cost: 2000,
+            type: "activity"
+          },
+          {
+            id: "spice-farm",
+            title: "Sahakari Spice Farm Experience",
+            description: "Traditional Goan lunch on banana leaf",
+            cost: 3500,
+            type: "activity"
+          },
+          {
+            id: "fontainhas",
+            title: "Fontainhas Latin Quarter Walk",
+            description: "Portuguese colonial architecture",
+            cost: 1000,
+            type: "activity"
+          },
+          {
+            id: "mandovi-cruise",
+            title: "Mandovi River Sunset Cruise",
+            description: "Folk dance performances onboard",
+            cost: 2200,
+            type: "activity"
+          }
+        );
+        break;
+      case 2: // Day 3
+        allActivities.push(
+          {
+            id: "palolem-trip",
+            title: "Palolem Beach Day Trip",
+            description: "Crescent-shaped beach with dolphin spotting",
+            cost: 1500,
+            type: "activity"
+          },
+          {
+            id: "palolem-lunch",
+            title: "Beach Shack Lunch at Palolem",
+            description: "Fresh seafood with sea view",
+            cost: 2000,
+            type: "activity"
+          },
+          {
+            id: "cabo-de-rama",
+            title: "Cabo de Rama Fort",
+            description: "Hidden clifftop fort with ocean views",
+            cost: 500,
+            type: "activity"
+          },
+          {
+            id: "agonda-sunset",
+            title: "Agonda Beach Sunset",
+            description: "Peaceful beach with golden sunset",
+            cost: 0,
+            type: "activity"
+          }
+        );
+        break;
+      case 3: // Day 4
+        allActivities.push(
+          {
+            id: "dudhsagar-trek",
+            title: "Dudhsagar Waterfalls Trek",
+            description: "Jeep safari + trek to India's 5th highest waterfall",
+            cost: 4500,
+            type: "activity"
+          },
+          {
+            id: "plantation-lunch",
+            title: "Lunch at Dudhsagar Plantation",
+            description: "Traditional Konkani thali",
+            cost: 1500,
+            type: "activity"
+          },
+          {
+            id: "chapora-fort",
+            title: "Chapora Fort (Dil Chahta Hai Fort)",
+            description: "Iconic fort with panoramic views",
+            cost: 0,
+            type: "activity"
+          },
+          {
+            id: "saturday-market",
+            title: "Saturday Night Market, Arpora",
+            description: "Shopping, live music, international food",
+            cost: 2000,
+            type: "activity"
+          }
+        );
+        break;
+      case 4: // Day 5
+        allActivities.push(
+          {
+            id: "mapusa-market",
+            title: "Mapusa Friday Market",
+            description: "Local spices, cashews, and handicrafts",
+            cost: 1500,
+            type: "activity"
+          },
+          {
+            id: "final-beach-time",
+            title: "Check-out & Beach Time",
+            description: "Final relaxation at Calangute",
+            cost: 0,
+            type: "activity"
+          },
+          {
+            id: "airport-return",
+            title: "Airport Transfer",
+            description: "Private cab to Dabolim Airport",
+            cost: 800,
+            type: "transport"
+          },
+          {
+            id: "return-flight",
+            title: "Return Flight to Bengaluru",
+            description: "Evening flight (IndiGo)",
+            cost: 9500,
+            type: "transport"
+          }
+        );
+        break;
+    }
+  });
+  
+  return allActivities;
+};
 
 export const BookingCart = ({ onBack, selectedItems }: BookingCartProps) => {
   const [isBooking, setIsBooking] = useState(false);
@@ -23,10 +230,21 @@ export const BookingCart = ({ onBack, selectedItems }: BookingCartProps) => {
   const [showDemo, setShowDemo] = useState(false);
   const { toast } = useToast();
 
-  const cartItems = mockCartItems.filter(item => selectedItems.includes(item.id));
+  // Get all activities and filter by selected items
+  const allActivities = getAllActivities();
+  const cartItems = allActivities.filter(activity => selectedItems.includes(activity.id));
   const subtotal = cartItems.reduce((sum, item) => sum + item.cost, 0);
   const taxes = Math.round(subtotal * 0.12); // 12% GST
   const total = subtotal + taxes;
+
+  const getActivityTypeLabel = (type: string) => {
+    switch (type) {
+      case 'transport': return 'Transport';
+      case 'accommodation': return 'Stay';
+      case 'activity': return 'Activity';
+      default: return 'Experience';
+    }
+  };
 
   const handleBooking = async () => {
     setIsBooking(true);
@@ -149,17 +367,26 @@ export const BookingCart = ({ onBack, selectedItems }: BookingCartProps) => {
               </CardHeader>
               
               <CardContent className="space-y-4">
-                {cartItems.map((item) => (
-                  <div key={item.id} className="flex justify-between items-start p-4 border rounded-lg">
-                    <div>
-                      <h4 className="font-medium">{item.name}</h4>
-                      <Badge variant="outline" className="mt-1">{item.type}</Badge>
-                    </div>
-                    <div className="text-right">
-                      <div className="font-bold">₹{item.cost.toLocaleString()}</div>
-                    </div>
+                {cartItems.length === 0 ? (
+                  <div className="text-center py-8 text-muted-foreground">
+                    <p>No items selected. Go back to select activities for your trip.</p>
                   </div>
-                ))}
+                ) : (
+                  cartItems.map((item) => (
+                    <div key={item.id} className="flex justify-between items-start p-4 border rounded-lg">
+                      <div>
+                        <h4 className="font-medium">{item.title}</h4>
+                        <p className="text-sm text-muted-foreground">{item.description}</p>
+                        <Badge variant="outline" className="mt-1">{getActivityTypeLabel(item.type)}</Badge>
+                      </div>
+                      <div className="text-right">
+                        <div className="font-bold">
+                          {item.cost === 0 ? 'Free' : `₹${item.cost.toLocaleString()}`}
+                        </div>
+                      </div>
+                    </div>
+                  ))
+                )}
               </CardContent>
             </Card>
 
