@@ -1,9 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Loader } from '@googlemaps/js-api-loader';
 import { Card } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Button } from '@/components/ui/button';
 import { MapPin, Clock, Route } from 'lucide-react';
 
 interface Activity {
@@ -59,10 +56,10 @@ const getLocationForActivity = (activity: Activity, index: number): { lat: numbe
 export const DayRouteMap: React.FC<DayRouteMapProps> = ({ activities, dayNumber }) => {
   const mapRef = useRef<HTMLDivElement>(null);
   const [map, setMap] = useState<google.maps.Map | null>(null);
-  const [apiKey, setApiKey] = useState<string>('');
-  const [isApiKeySet, setIsApiKeySet] = useState(false);
   const [totalDistance, setTotalDistance] = useState<string>('');
   const [totalDuration, setTotalDuration] = useState<string>('');
+  
+  const GOOGLE_MAPS_API_KEY = 'AIzaSyCY9KhK8IekCCNs-t9W_L7WMTrvv_VZa60';
 
   const initializeMap = async (googleMapsApiKey: string) => {
     if (!mapRef.current || !googleMapsApiKey) return;
@@ -196,53 +193,9 @@ export const DayRouteMap: React.FC<DayRouteMapProps> = ({ activities, dayNumber 
     }
   };
 
-  const handleApiKeySubmit = () => {
-    if (apiKey.trim()) {
-      setIsApiKeySet(true);
-      initializeMap(apiKey.trim());
-    }
-  };
-
   useEffect(() => {
-    if (isApiKeySet && apiKey) {
-      initializeMap(apiKey);
-    }
-  }, [activities, isApiKeySet]);
-
-  if (!isApiKeySet) {
-    return (
-      <Card className="p-6 mb-6">
-        <div className="space-y-4">
-          <div className="flex items-center gap-2">
-            <MapPin className="h-5 w-5 text-primary" />
-            <h3 className="text-lg font-semibold">Day {dayNumber} Route Map</h3>
-          </div>
-          <p className="text-sm text-muted-foreground">
-            Enter your Google Maps API key to view the interactive route map for this day's activities.
-          </p>
-          <div className="space-y-2">
-            <Label htmlFor="api-key">Google Maps API Key</Label>
-            <div className="flex gap-2">
-              <Input
-                id="api-key"
-                type="password"
-                placeholder="Enter your Google Maps API key"
-                value={apiKey}
-                onChange={(e) => setApiKey(e.target.value)}
-                className="flex-1"
-              />
-              <Button onClick={handleApiKeySubmit} disabled={!apiKey.trim()}>
-                Load Map
-              </Button>
-            </div>
-            <p className="text-xs text-muted-foreground">
-              Get your API key from the <a href="https://console.cloud.google.com/google/maps-apis" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">Google Cloud Console</a>
-            </p>
-          </div>
-        </div>
-      </Card>
-    );
-  }
+    initializeMap(GOOGLE_MAPS_API_KEY);
+  }, [activities]);
 
   return (
     <Card className="p-4 mb-6">
