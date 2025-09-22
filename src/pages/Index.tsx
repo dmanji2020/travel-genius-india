@@ -2,7 +2,8 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { MapPin, Plane, Calendar, Users, Star, Shield, TrendingUp, Heart } from "lucide-react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import { MapPin, Plane, Calendar, Users, Star, Shield, TrendingUp, Heart, Sparkles } from "lucide-react";
 import heroImage from "@/assets/hero-travel.jpg";
 import hiddenGemsImage from "@/assets/hidden-gems.jpg";
 import tripeaseLogo from "@/assets/tripease-logo.png";
@@ -13,6 +14,7 @@ const Index = () => {
   const [showPlanning, setShowPlanning] = useState(false);
   const [showItinerary, setShowItinerary] = useState(false);
   const [isDemoMode, setIsDemoMode] = useState(false);
+  const [showComingSoon, setShowComingSoon] = useState(false);
 
   if (showItinerary) {
     return <TripItinerary onBack={() => setShowItinerary(false)} />;
@@ -70,7 +72,7 @@ const Index = () => {
               <Button 
                 variant="hero" 
                 size="lg" 
-                onClick={() => setShowPlanning(true)}
+                onClick={() => setShowComingSoon(true)}
                 className="text-lg px-8 py-4"
               >
                 <Plane className="w-5 h-5 mr-2" />
@@ -238,7 +240,7 @@ const Index = () => {
           <Button 
             variant="hero" 
             size="lg" 
-            onClick={() => setShowPlanning(true)}
+            onClick={() => setShowComingSoon(true)}
             className="text-lg px-8 py-4"
           >
             <Plane className="w-5 h-5 mr-2" />
@@ -246,6 +248,51 @@ const Index = () => {
           </Button>
         </div>
       </section>
+
+      {/* Coming Soon Modal */}
+      <Dialog open={showComingSoon} onOpenChange={setShowComingSoon}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <div className="flex items-center justify-center mb-4">
+              <div className="bg-gradient-sunset p-3 rounded-full">
+                <Sparkles className="w-8 h-8 text-primary-foreground" />
+              </div>
+            </div>
+            <DialogTitle className="text-center text-2xl font-bold bg-gradient-sunset bg-clip-text text-transparent">
+              Coming Soon!
+            </DialogTitle>
+            <DialogDescription className="text-center text-lg mt-4">
+              We're putting the finishing touches on TripEase.AI's full planning experience. 
+              Our intelligent trip planner will be available soon with personalized itineraries, 
+              real-time adaptations, and transparent pricing.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="mt-6 text-center">
+            <p className="text-sm text-muted-foreground mb-4">
+              Want to see a demo? Try our sample journey instead!
+            </p>
+            <div className="flex gap-3 justify-center">
+              <Button 
+                variant="outline" 
+                onClick={() => setShowComingSoon(false)}
+              >
+                Close
+              </Button>
+              <Button 
+                variant="hero"
+                onClick={() => {
+                  setShowComingSoon(false);
+                  setIsDemoMode(true);
+                  setShowPlanning(true);
+                }}
+              >
+                <Star className="w-4 h-4 mr-2" />
+                See Demo Journey
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
