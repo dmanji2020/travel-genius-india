@@ -6,6 +6,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ArrowLeft, MapPin, Clock, DollarSign, Star, Info, ShoppingCart, Zap, Users, Calendar, Plane, Hotel, Camera, Heart, Car } from "lucide-react";
 import { WhyThisModal } from "@/components/WhyThisModal";
 import { BookingCart } from "@/components/BookingCart";
+import { DayRouteMap } from "./DayRouteMap";
 
 interface TripItineraryProps {
   onBack: () => void;
@@ -386,6 +387,8 @@ export const TripItinerary = ({ onBack }: TripItineraryProps) => {
                 </CardHeader>
                 
                 <CardContent>
+                  <DayRouteMap activities={day.activities} dayNumber={day.day} />
+                  
                   <div className="space-y-4">
                     {day.activities.map((activity) => {
                       const IconComponent = activity.icon;
